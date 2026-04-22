@@ -12,16 +12,50 @@ import AppLayout from "../../Components/Layout/AppLayout";
 import PlirafyPhraseWhite from "../../assets/PlirafyPhraseWhite.png";
 import PlirafyBackground from "../../assets/PlirafyBackground.png";
 import KuMiStackMarkNOBG from "../../assets/KuMiStackMarkNOBG.png";
+import { useSignUp } from "./hooks/useSignUp";
 
 function SignUpPage() {
   const navigate = useNavigate();
+  const { mutate, isPending, error } = useSignUp();
 
   const [username, setUsername] = useState("");
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
+  const [fieldErrors, setFieldErrors] = useState({
+    username: "",
+    email: "",
+    password: "",
+  });
 
   const handleSignUp = () => {
-    console.log("Register account:", { username, email, password });
+    const nextFieldErrors = {
+      username: username.trim() ? "" : "Username is required",
+      email: email.trim() ? "" : "Email is required",
+      password: password ? "" : "Password is required",
+    };
+
+    setFieldErrors(nextFieldErrors);
+
+    if (Object.values(nextFieldErrors).some(Boolean)) {
+      return;
+    }
+
+    mutate(
+      {
+        username: username.trim(),
+        email: email.trim(),
+        password,
+      },
+      {
+        onSuccess: (data) => {
+          console.log("Sign up success:", data);
+          navigate("/");
+        },
+        onError: (err) => {
+          console.error("Sign up error:", err);
+        },
+      }
+    );
   };
 
   return (
@@ -123,6 +157,9 @@ function SignUpPage() {
                 fullWidth
                 value={username}
                 onChange={(e) => setUsername(e.target.value)}
+                required
+                error={Boolean(fieldErrors.username)}
+                helperText={fieldErrors.username}
                 sx={{ mb: 1.75 }}
               />
 
@@ -132,6 +169,9 @@ function SignUpPage() {
                 fullWidth
                 value={email}
                 onChange={(e) => setEmail(e.target.value)}
+                required
+                error={Boolean(fieldErrors.email)}
+                helperText={fieldErrors.email}
                 sx={{ mb: 1.75 }}
               />
 
@@ -141,6 +181,9 @@ function SignUpPage() {
                 fullWidth
                 value={password}
                 onChange={(e) => setPassword(e.target.value)}
+                required
+                error={Boolean(fieldErrors.password)}
+                helperText={fieldErrors.password}
                 sx={{ mb: 2.25 }}
               />
 
@@ -153,9 +196,18 @@ function SignUpPage() {
                   fontWeight: 700,
                 }}
                 onClick={handleSignUp}
+                disabled={isPending}
               >
-                Register
+                {isPending ? "Registering..." : "Register"}
               </Button>
+
+              {error instanceof Error && (
+                <Typography
+                  sx={{ mt: 1.5, color: "error.main", textAlign: "center" }}
+                >
+                  {error.message}
+                </Typography>
+              )}
 
               <Box
                 sx={{
