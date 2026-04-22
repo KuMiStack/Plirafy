@@ -1,6 +1,7 @@
 import express from "express";
 import cors from "cors";
 import dotenv from "dotenv";
+import testRoutes from "./Routes/testRoutes.js";
 
 dotenv.config();
 
@@ -13,7 +14,9 @@ app.get("/", (req, res) => {
   res.send("Backend is alive. Barely, but alive.");
 });
 
-const PORT = process.env.PORT || 5000;
+app.use("/api", testRoutes);
+
+const PORT = process.env.BACKEND_PORT || 5000;
 
 app.listen(PORT, () => {
   console.log(`Server running on http://localhost:${PORT}`);
