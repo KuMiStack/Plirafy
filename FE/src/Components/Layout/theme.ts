@@ -15,7 +15,7 @@ const theme = createTheme({
     },
     text: {
       primary: "#e5e7eb",
-      secondary: "#aaa",
+      secondary: "#9ca3af",
     },
   },
 
@@ -27,8 +27,9 @@ const theme = createTheme({
     MuiPaper: {
       styleOverrides: {
         root: {
-          background: "#121826",
-          boxShadow: "0 0 25px rgba(124, 92, 255, 0.2)",
+          backgroundColor: "#121826",
+          backgroundImage: "none",
+          boxShadow: "0 0 18px rgba(124, 92, 255, 0.15)",
         },
       },
     },
@@ -36,11 +37,16 @@ const theme = createTheme({
     MuiButton: {
       styleOverrides: {
         root: {
-          fontWeight: "bold",
-          color: "#fff",
-          background: "linear-gradient(90deg, #7c5cff, #3aa0ff)",
+          fontWeight: 700,
           borderRadius: 10,
-          transition: "0.3s",
+          textTransform: "none",
+          paddingTop: 10,
+          paddingBottom: 10,
+        },
+        contained: {
+          color: "#ffffff",
+          background: "linear-gradient(90deg, #7c5cff, #3aa0ff)",
+          boxShadow: "none",
         },
       },
       variants: [
@@ -49,36 +55,67 @@ const theme = createTheme({
           style: {
             "&:hover": {
               background: "linear-gradient(90deg, #6a4de0, #2f8ae6)",
-              boxShadow: "0 0 15px rgba(124, 92, 255, 0.5)",
+              boxShadow: "0 0 12px rgba(124, 92, 255, 0.35)",
             },
           },
         },
       ],
     },
 
-    MuiTextField: {
+    MuiOutlinedInput: {
+  styleOverrides: {
+    root: {
+      backgroundColor: "#1a2233",
+      borderRadius: 10,
+      transition: "all 0.2s ease",
+
+      "& input": {
+        color: "#e5e7eb",
+      },
+
+      "& input:-webkit-autofill": {
+        WebkitBoxShadow: "0 0 0 100px #1a2233 inset",
+        WebkitTextFillColor: "#e5e7eb",
+        borderRadius: "10px",
+      },
+
+      "& input:-webkit-autofill:hover": {
+        WebkitBoxShadow: "0 0 0 100px #1a2233 inset",
+      },
+
+      "& input:-webkit-autofill:focus": {
+        WebkitBoxShadow: "0 0 0 100px #1a2233 inset",
+      },
+
+      "& fieldset": {
+        borderColor: "#2f3b52",
+      },
+      "&:hover fieldset": {
+        borderColor: "#7c5cff",
+      },
+      "&.Mui-focused fieldset": {
+        borderColor: "#3aa0ff",
+        borderWidth: 1.5,
+      },
+    },
+  },
+},
+
+    MuiInputLabel: {
       styleOverrides: {
         root: {
-          "& .MuiInputBase-input": {
-            color: "#fff",
-          },
-          "& .MuiInputLabel-root": {
-            color: "#aaa",
-          },
-          "& .MuiInputLabel-root.Mui-focused": {
+          color: "#9ca3af",
+          "&.Mui-focused": {
             color: "#3aa0ff",
           },
-          "& .MuiOutlinedInput-root": {
-            "& fieldset": {
-              borderColor: "#333",
-            },
-            "&:hover fieldset": {
-              borderColor: "#7c5cff",
-            },
-            "&.Mui-focused fieldset": {
-              borderColor: "#3aa0ff",
-            },
-          },
+        },
+      },
+    },
+
+    MuiTypography: {
+      styleOverrides: {
+        root: {
+          color: "#e5e7eb",
         },
       },
     },

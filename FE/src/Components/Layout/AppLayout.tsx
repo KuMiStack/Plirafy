@@ -5,13 +5,14 @@ const AppLayout = ({ children }: { children: ReactNode }) => {
   return (
     <Box
       sx={{
-        minHeight: "100vh",
+        height: "100dvh",
         width: "100%",
-        backgroundColor: "background.default",
         display: "flex",
         alignItems: "center",
         justifyContent: "center",
         px: 2,
+        overflow: "hidden",
+        backgroundColor: "background.default",
       }}
     >
       {children}
