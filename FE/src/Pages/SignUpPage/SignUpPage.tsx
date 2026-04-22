@@ -1,4 +1,4 @@
-import { useState, useEffect } from "react";
+import { useState } from "react";
 import {
   TextField,
   Button,
@@ -12,45 +12,20 @@ import AppLayout from "../../Components/Layout/AppLayout";
 import PlirafyPhraseWhite from "../../assets/PlirafyPhraseWhite.png";
 import PlirafyBackground from "../../assets/PlirafyBackground.png";
 import KuMiStackMarkNOBG from "../../assets/KuMiStackMarkNOBG.png";
-import { useLogin } from "./hooks/useLogin";
 
-function LoginPage() {
+function SignUpPage() {
   const navigate = useNavigate();
-  const { mutate, isPending, error } = useLogin();
 
   const [username, setUsername] = useState("");
+  const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
-  const [message, setMessage] = useState("");
 
-  const handleLogin = () => {
-    mutate(
-      { username, password },
-      {
-        onSuccess: (data) => {
-          console.log("Login success:", data);
-          navigate("/homepage");
-        },
-        onError: (err) => {
-          console.error("Login error:", err);
-        },
-      }
-    );
+  const handleSignUp = () => {
+    console.log("Register account:", { username, email, password });
   };
-
-  useEffect(() => {
-    fetch("http://localhost:5000/api/hello")
-      .then((res) => res.json())
-      .then((data) => {
-        setMessage(data.message);
-      })
-      .catch(() => {
-        setMessage("Failed to connect to backend");
-      });
-  }, []);
 
   return (
     <AppLayout>
-      {/* 🔥 BACKGROUND WRAPPER */}
       <Box
         sx={{
           minHeight: "100vh",
@@ -66,7 +41,6 @@ function LoginPage() {
           backgroundRepeat: "no-repeat",
         }}
       >
-        {/* 🔥 DARK OVERLAY (so text is readable and not fighting your background) */}
         <Box
           sx={{
             position: "absolute",
@@ -77,7 +51,6 @@ function LoginPage() {
           }}
         />
 
-        {/* 🔥 CONTENT */}
         <Box
           sx={{
             width: "min(100%, 34rem)",
@@ -131,7 +104,7 @@ function LoginPage() {
                   fontSize: "clamp(2.2rem, 3.5vw, 3rem)",
                 }}
               >
-                Login
+                Sign Up
               </Typography>
 
               <Typography
@@ -142,7 +115,7 @@ function LoginPage() {
                   color: "text.secondary",
                 }}
               >
-                Sign in to continue to Plirafy
+                Create your Plirafy account
               </Typography>
 
               <TextField
@@ -154,23 +127,22 @@ function LoginPage() {
               />
 
               <TextField
+                label="Email"
+                type="email"
+                fullWidth
+                value={email}
+                onChange={(e) => setEmail(e.target.value)}
+                sx={{ mb: 1.75 }}
+              />
+
+              <TextField
                 label="Password"
                 type="password"
                 fullWidth
                 value={password}
                 onChange={(e) => setPassword(e.target.value)}
-                sx={{ mb: 0.75 }}
+                sx={{ mb: 2.25 }}
               />
-
-              <Box sx={{ display: "flex", justifyContent: "flex-end", mb: 2.25 }}>
-                <Link
-                  component="button"
-                  underline="hover"
-                  sx={{ color: "secondary.main" }}
-                >
-                  Forgot Password?
-                </Link>
-              </Box>
 
               <Button
                 fullWidth
@@ -180,19 +152,10 @@ function LoginPage() {
                   borderRadius: "1rem",
                   fontWeight: 700,
                 }}
-                onClick={handleLogin}
-                disabled={isPending}
+                onClick={handleSignUp}
               >
-                {isPending ? "Logging in..." : "Login"}
+                Register
               </Button>
-
-              {error instanceof Error && (
-                <Typography
-                  sx={{ mt: 1.5, color: "error.main", textAlign: "center" }}
-                >
-                  {error.message}
-                </Typography>
-              )}
 
               <Box
                 sx={{
@@ -203,14 +166,14 @@ function LoginPage() {
                 }}
               >
                 <Typography color="text.secondary">
-                  Don&apos;t have an account?
+                  Already have an account?
                 </Typography>
                 <Link
                   component="button"
                   underline="hover"
-                  onClick={() => navigate("/signup")}
+                  onClick={() => navigate("/")}
                 >
-                  Register Account
+                  Login
                 </Link>
               </Box>
             </Paper>
@@ -253,24 +216,10 @@ function LoginPage() {
               KuMiStack
             </Typography>
           </Box>
-
-          {message && (
-            <Typography
-              variant="caption"
-              sx={{
-                color:
-                  message === "Failed to connect to backend"
-                    ? "error.main"
-                    : "success.main",
-              }}
-            >
-              {message}
-            </Typography>
-          )}
         </Box>
       </Box>
     </AppLayout>
   );
 }
 
-export default LoginPage;
+export default SignUpPage;
