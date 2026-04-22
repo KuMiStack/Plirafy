@@ -1,9 +1,19 @@
 const loginApi = `${import.meta.env.VITE_BACKEND_URL_HUB}/api/auth/login`;
 
+export type LoginResponse = {
+  success: boolean;
+  message: string;
+  user: {
+    id: number;
+    username: string;
+    email: string;
+  };
+};
+
 export const postLogin = async (payload: {
   username: string;
   password: string;
-}) => {
+}): Promise<LoginResponse> => {
   const res = await fetch(loginApi, {
     method: "POST",
     headers: {

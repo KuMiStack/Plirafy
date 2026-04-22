@@ -4,7 +4,7 @@ import PlirafyLogo from "../../assets/PlirafyLogo.jpeg";
 
 function HomePage() {
   return (
-    <AppLayout>
+    <AppLayout showAppBar>
       <Box
         component="img"
         src={PlirafyLogo}

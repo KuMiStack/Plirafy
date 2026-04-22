@@ -6,21 +6,31 @@ import {
   Paper,
   Box,
   Link,
+  Snackbar,
+  Alert,
 } from "@mui/material";
 import { useNavigate } from "react-router-dom";
 import AppLayout from "../../Components/Layout/AppLayout";
 import PlirafyPhraseWhite from "../../assets/PlirafyPhraseWhite.png";
-import PlirafyBackground from "../../assets/PlirafyBackground.png";
 import KuMiStackMarkNOBG from "../../assets/KuMiStackMarkNOBG.png";
 import { useSignUp } from "./hooks/useSignUp";
 
 function SignUpPage() {
   const navigate = useNavigate();
-  const { mutate, isPending, error } = useSignUp();
+  const { mutate, isPending } = useSignUp();
 
   const [username, setUsername] = useState("");
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
+  const [notification, setNotification] = useState<{
+    open: boolean;
+    severity: "success" | "error";
+    message: string;
+  }>({
+    open: false,
+    severity: "success",
+    message: "",
+  });
   const [fieldErrors, setFieldErrors] = useState({
     username: "",
     email: "",
@@ -49,10 +59,20 @@ function SignUpPage() {
       {
         onSuccess: (data) => {
           console.log("Sign up success:", data);
-          navigate("/");
+          setNotification({
+            open: true,
+            severity: "success",
+            message: "Account created successfully",
+          });
+          window.setTimeout(() => navigate("/"), 900);
         },
         onError: (err) => {
           console.error("Sign up error:", err);
+          setNotification({
+            open: true,
+            severity: "error",
+            message: err instanceof Error ? err.message : "Sign up failed",
+          });
         },
       }
     );
@@ -69,22 +89,8 @@ function SignUpPage() {
           alignItems: "center",
           position: "relative",
           overflow: "hidden",
-          backgroundImage: `url(${PlirafyBackground})`,
-          backgroundSize: "cover",
-          backgroundPosition: "center",
-          backgroundRepeat: "no-repeat",
         }}
       >
-        <Box
-          sx={{
-            position: "absolute",
-            inset: 0,
-            background:
-              "radial-gradient(circle at center, rgba(10,10,30,0.6), rgba(5,5,15,0.9))",
-            backdropFilter: "blur(2px)",
-          }}
-        />
-
         <Box
           sx={{
             width: "min(100%, 34rem)",
@@ -201,14 +207,6 @@ function SignUpPage() {
                 {isPending ? "Registering..." : "Register"}
               </Button>
 
-              {error instanceof Error && (
-                <Typography
-                  sx={{ mt: 1.5, color: "error.main", textAlign: "center" }}
-                >
-                  {error.message}
-                </Typography>
-              )}
-
               <Box
                 sx={{
                   mt: 2.25,
@@ -269,6 +267,26 @@ function SignUpPage() {
             </Typography>
           </Box>
         </Box>
+
+        <Snackbar
+          open={notification.open}
+          autoHideDuration={3500}
+          onClose={() =>
+            setNotification((current) => ({ ...current, open: false }))
+          }
+          anchorOrigin={{ vertical: "top", horizontal: "center" }}
+        >
+          <Alert
+            severity={notification.severity}
+            variant="filled"
+            onClose={() =>
+              setNotification((current) => ({ ...current, open: false }))
+            }
+            sx={{ width: "100%" }}
+          >
+            {notification.message}
+          </Alert>
+        </Snackbar>
       </Box>
     </AppLayout>
   );
