@@ -60,7 +60,7 @@ export const login = async (req, res) => {
 };
 
 
-export const signUp = async(req,res) => {
+export const signup = async(req,res) => {
     try {
         const {username, password, email} = req.body;
 
