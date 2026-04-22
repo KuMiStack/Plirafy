@@ -26,7 +26,7 @@ function LoginPage() {
   };
 
   useEffect(() => {
-    fetch("http://localhost:5000/api/test")
+    fetch("http://localhost:5000/api/hello")
       .then((res) => res.json())
       .then((data) => {
         setMessage(data.message);

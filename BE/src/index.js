@@ -2,6 +2,7 @@ import express from "express";
 import cors from "cors";
 import dotenv from "dotenv";
 import testRoutes from "./Routes/testRoutes.js";
+import authRoutes from "./Routes/authRoutes.js";
 
 dotenv.config();
 
@@ -11,10 +12,11 @@ app.use(cors());
 app.use(express.json());
 
 app.get("/", (req, res) => {
-  res.send("Backend is alive. Barely, but alive.");
+  res.send("Backend is alive. Surprise Mothafucka!");
 });
 
 app.use("/api", testRoutes);
+app.use("/api/auth", authRoutes);
 
 const PORT = process.env.BACKEND_PORT || 5000;
 
