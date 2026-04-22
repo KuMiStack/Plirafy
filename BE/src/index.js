@@ -3,6 +3,7 @@ import cors from "cors";
 import dotenv from "dotenv";
 import testRoutes from "./Routes/testRoutes.js";
 import authRoutes from "./Routes/authRoutes.js";
+import { supabase } from "./supabase.js";
 
 dotenv.config();
 
