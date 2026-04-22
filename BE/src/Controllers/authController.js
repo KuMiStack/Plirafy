@@ -1,5 +1,5 @@
 export const login = (req, res) => {
-  const { username, password } = req.query;
+  const { username, password } = req.body;
 
   if (username === "root" && password === "root") {
     return res.json({
