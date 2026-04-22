@@ -9,24 +9,35 @@ import {
 } from "@mui/material";
 import { useNavigate } from "react-router-dom";
 import AppLayout from "../../Components/Layout/AppLayout";
-import PlirafyPhrase from "../../assets/PlirafyPhrase.png";
-import KuMiStackLogo from "../../assets/KuMiStackNOBG.png";
+import PlirafyPhraseWhite from "../../assets/PlirafyPhraseWhite.png";
+import { useLogin } from "./hooks/useLogin";
+/* import KuMiStackLogo from "../../assets/KuMiStackNOBG.png"; */
 
 function LoginPage() {
   const navigate = useNavigate();
+  const { mutate, isPending, error } = useLogin();
 
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
   const [message, setMessage] = useState("");
 
   const handleLogin = () => {
-    console.log("Username:", username);
-    console.log("Password:", password);
-    navigate("/homepage");
+    mutate(
+      { username, password },
+      {
+        onSuccess: (data) => {
+          console.log("Login success:", data);
+          navigate("/homepage");
+        },
+        onError: (err) => {
+          console.error("Login error:", err);
+        },
+      }
+    );
   };
 
   useEffect(() => {
-    fetch("http://localhost:5000/api/test")
+    fetch("http://localhost:5000/api/hello")
       .then((res) => res.json())
       .then((data) => {
         setMessage(data.message);
@@ -47,66 +58,67 @@ function LoginPage() {
           flexDirection: "column",
           alignItems: "center",
           justifyContent: "center",
-          gap: 2,
-          py: 2,
+          gap: 1.75,
+          py: 1.5,
         }}
       >
-        {/* Floating Logo + Card Wrapper */}
         <Box
           sx={{
             position: "relative",
             width: "100%",
           }}
         >
-          {/* Floating Logo */}
           <Box
             component="img"
-            src={PlirafyPhrase}
-            alt="Plirafy logo"
+            src={PlirafyPhraseWhite}
+            alt="Plirafy phrase white"
             sx={{
               position: "absolute",
-              top: "-3.5rem",
+              top: "-2.9rem",
               left: "50%",
               transform: "translateX(-50%)",
-              width: "clamp(8rem, 18vw, 12rem)",
+              width: "clamp(7.5rem, 17vw, 11rem)",
               height: "auto",
               zIndex: 2,
-              filter: "drop-shadow(0 8px 25px rgba(124, 92, 255, 0.35))",
+              filter: "drop-shadow(0 8px 25px rgba(124, 92, 255, 0.32))",
               pointerEvents: "none",
             }}
           />
 
-          {/* Login Card */}
           <Paper
             elevation={8}
             sx={{
               width: "100%",
-              pt: "4.5rem", // space for floating logo
+              pt: "6.25rem",
               px: "clamp(1.1rem, 2.4vw, 2rem)",
-              pb: "clamp(1.1rem, 2.4vw, 2rem)",
-              borderRadius: "clamp(1rem, 2vw, 1.5rem)",
-              border: "1px solid rgba(124, 92, 255, 0.14)",
+              pb: "clamp(1.3rem, 2.4vw, 2rem)",
+              borderRadius: "clamp(1.2rem, 2vw, 1.7rem)",
+              border: "1px solid rgba(124, 92, 255, 0.16)",
               backdropFilter: "blur(8px)",
+              boxShadow: "0 0 30px rgba(70, 60, 180, 0.12)",
             }}
           >
             <Typography
               variant="h4"
               sx={{
                 textAlign: "center",
-                mb: 0.5,
-                fontWeight: 800,
-                fontSize: "clamp(2rem, 3.2vw, 2.8rem)",
+                mb: 0.75,
+                fontWeight: 600,
+                fontSize: "clamp(2.2rem, 3.5vw, 3rem)",
+                letterSpacing: "-0.03em",
+                lineHeight: 1.05,
               }}
             >
               Login
             </Typography>
 
             <Typography
-              variant="body2"
+              variant="body1"
               sx={{
                 textAlign: "center",
-                mb: 2.5,
+                mb: 2.75,
                 color: "text.secondary",
+                fontSize: "clamp(1rem, 1.2vw, 1.08rem)",
               }}
             >
               Sign in to continue to Plirafy
@@ -133,10 +145,21 @@ function LoginPage() {
               sx={{
                 display: "flex",
                 justifyContent: "flex-end",
-                mb: 2,
+                mb: 2.25,
               }}
             >
-              <Link component="button" underline="hover">
+              <Link
+                component="button"
+                type="button"
+                underline="hover"
+                onClick={() => {}}
+                sx={{
+                  color: "secondary.main",
+                  fontSize: "0.98rem",
+                  fontWeight: 500,
+                  cursor: "pointer",
+                }}
+              >
                 Forgot Password?
               </Link>
             </Box>
@@ -145,68 +168,106 @@ function LoginPage() {
               fullWidth
               variant="contained"
               sx={{
-                py: "0.9rem",
-                borderRadius: "0.9rem",
+                py: "0.95rem",
+                borderRadius: "1rem",
+                fontSize: "1.05rem",
+                fontWeight: 700,
               }}
               onClick={handleLogin}
+              disabled={isPending}
             >
-              Login
+              {isPending ? "Logging in..." : "Login"}
             </Button>
+
+            {error instanceof Error && (
+              <Typography
+                variant="body2"
+                sx={{
+                  mt: 1.5,
+                  color: "error.main",
+                  textAlign: "center",
+                }}
+              >
+                {error.message}
+              </Typography>
+            )}
 
             <Box
               sx={{
-                mt: 2,
+                mt: 2.25,
                 display: "flex",
                 justifyContent: "center",
+                alignItems: "center",
                 gap: 0.5,
                 flexWrap: "wrap",
+                textAlign: "center",
               }}
             >
-              <Typography variant="body2" color="text.secondary">
+              <Typography variant="body2" sx={{ color: "text.secondary" }}>
                 Don&apos;t have an account?
               </Typography>
 
-              <Link component="button" underline="hover">
+              <Link
+                component="button"
+                type="button"
+                underline="hover"
+                onClick={() => {}}
+                sx={{
+                  color: "primary.main",
+                  fontSize: "1rem",
+                  fontWeight: 600,
+                  cursor: "pointer",
+                }}
+              >
                 Register Account
               </Link>
             </Box>
           </Paper>
         </Box>
 
-        {/* Bottom Logo */}
         <Box
           sx={{
             display: "flex",
             flexDirection: "column",
             alignItems: "center",
-            gap: 0.4,
-            opacity: 0.9,
+            gap: 0.35,
+            opacity: 0.92,
+            mt: 0.25,
           }}
         >
-          <Typography variant="body2" color="text.secondary">
-            Created by
+          <Typography
+            variant="body2"
+            sx={{
+              color: "text.secondary",
+              letterSpacing: "0.02em",
+            }}
+          >
+            Created by: KuMiStack
           </Typography>
 
-          <Box
+          {/* <Box
             component="img"
             src={KuMiStackLogo}
             alt="KuMiStack Logo"
             sx={{
-              width: "clamp(2.5rem, 5vw, 4rem)",
+              width: "clamp(2.3rem, 4.6vw, 3.3rem)",
               height: "auto",
+              display: "block",
             }}
-          />
+          /> */}
         </Box>
 
         {message && (
           <Typography
             variant="caption"
             sx={{
+              mt: 0.5,
               color:
                 message === "Failed to connect to backend"
                   ? "error.main"
                   : "success.main",
               textAlign: "center",
+              fontSize: "0.85rem",
             }}
           >
             {message}

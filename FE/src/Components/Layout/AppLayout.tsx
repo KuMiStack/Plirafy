@@ -13,6 +13,7 @@ const AppLayout = ({ children }: { children: ReactNode }) => {
         px: 2,
         overflow: "hidden",
         backgroundColor: "background.default",
+        boxSizing: "border-box",
       }}
     >
       {children}
