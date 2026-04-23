@@ -1,0 +1,46 @@
+
+export const deleteActivities = async (req, res) => {
+  try {
+    const { activityName } = req.query;
+
+    if (!activityName) {
+      return res.status(400).json({
+        success: false,
+        message: "No ActivityName found!",
+      });
+    }
+
+    const { data, error } = await supabase
+      .from("activities")
+      .delete()
+      .eq("activityName", activityName)
+      .select();
+
+    if (error) {
+      return res.status(500).json({
+        success: false,
+        message: "Failed to delete activity.",
+        error: error.message,
+      });
+    }
+
+    if (!data || data.length === 0) {
+      return res.status(404).json({
+        success: false,
+        message: "Couldn't find activity with selected name!",
+      });
+    }
+
+    return res.status(200).json({
+      success: true,
+      message: "Activity deleted successfully!",
+      data,
+    });
+  } catch (error) {
+    return res.status(500).json({
+      success: false,
+      message: "Internal Server Error",
+      error: error.message,
+    });
+  }
+};

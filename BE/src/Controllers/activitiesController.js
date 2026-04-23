@@ -212,3 +212,49 @@ export const getUserActivities = async (req, res) => {
     });
   }
 };
+
+export const deleteUserActivities = async (req,res) => {
+  try{
+    const {userActivityId} = req.query;
+
+    if(!userActivityId){
+      return res.status(400).json({
+        success: false,
+        message:"userActivityId is requred.",
+      });
+    }
+
+    const {data,error} = await supabase
+    .from("user_activities")
+    .delete()
+    .eq("userActivityId", userActivityId)
+    .select()
+
+    if(error){
+      return res.status(500).json({
+        success: false,
+        message: "Failed to delete user activity.",
+        error: error.message
+      });
+    }
+
+    if(!data || data.length === 0){
+      return res.status(404).json({
+        success: false,
+        message:"Couldn`t find user activity with selected name.",
+      });
+    }
+
+    return res.status(200).json({
+      success:true,
+      message:"User activity deleted successfully!",
+      data,
+    })
+  } catch(error){
+    return res.status(500).json({
+      success: false,
+      message: "Internal Server error.",
+      error: error.message,
+    })
+  }
+}
