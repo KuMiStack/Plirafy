@@ -30,8 +30,7 @@ const AppLayout = ({ children, showAppBar = false }: AppLayoutProps) => {
           content: '""',
           position: "absolute",
           inset: 0,
-          background:
-            "radial-gradient(circle at center, rgba(10,10,30,0.6), rgba(5,5,15,0.9))",
+          background: "var(--plirafy-background-overlay)",
           backdropFilter: "blur(2px)",
         },
       }}

@@ -116,7 +116,7 @@ function SignUpPage() {
                 transform: "translateX(-50%)",
                 width: "clamp(7.5rem, 17vw, 11rem)",
                 zIndex: 2,
-                filter: "drop-shadow(0 8px 25px rgba(124, 92, 255, 0.32))",
+                filter: "drop-shadow(0 8px 25px var(--plirafy-accent-shadow))",
                 pointerEvents: "none",
               }}
             />
@@ -129,10 +129,10 @@ function SignUpPage() {
                 px: "clamp(1.1rem, 2.4vw, 2rem)",
                 pb: "clamp(1.3rem, 2.4vw, 2rem)",
                 borderRadius: "clamp(1.2rem, 2vw, 1.7rem)",
-                border: "1px solid rgba(124, 92, 255, 0.16)",
+                border: "1px solid var(--plirafy-divider)",
                 backdropFilter: "blur(12px)",
-                background: "rgba(20, 20, 40, 0.55)",
-                boxShadow: "0 0 30px rgba(70, 60, 180, 0.2)",
+                background: "var(--plirafy-paper-glass)",
+                boxShadow: "0 0 30px var(--plirafy-accent-shadow)",
               }}
             >
               <Typography
@@ -255,7 +255,7 @@ function SignUpPage() {
             <Typography
               variant="body2"
               sx={{
-                color: "rgba(255, 255, 255, 0.82)",
+                color: "text.primary",
                 fontWeight: 700,
                 lineHeight: 1,
                 fontSize: "0.9rem",
