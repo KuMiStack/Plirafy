@@ -4,6 +4,7 @@ import dotenv from "dotenv";
 import testRoutes from "./Routes/testRoutes.js";
 import authRoutes from "./Routes/authRoutes.js";
 import activitiesRoutes from "./Routes/activitiesRoutes.js";
+import financialRoutes from "./Routes/financialRoutes.js";
 
 import { supabase } from "./supabase.js";
 
@@ -21,6 +22,7 @@ app.get("/", (req, res) => {
 app.use("/api", testRoutes);
 app.use("/api/auth", authRoutes);
 app.use("/api/activities", activitiesRoutes);
+app.use("/api/financial", financialRoutes);
 
 const PORT = process.env.BACKEND_PORT || 5000;
 
