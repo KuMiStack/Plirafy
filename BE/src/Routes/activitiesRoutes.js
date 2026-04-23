@@ -15,6 +15,6 @@ router.delete("/deleteActivities", deleteActivities);
 
 router.get("/getUserActivities", getUserActivities);
 router.post("/assignActivityToUser", AssignActivityToUser);
-router.delete("/deleteUserActivity", deleteUserActivities);
+router.delete("/deleteUserActivities", deleteUserActivities);
 
 export default router;
