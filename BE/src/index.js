@@ -3,6 +3,8 @@ import cors from "cors";
 import dotenv from "dotenv";
 import testRoutes from "./Routes/testRoutes.js";
 import authRoutes from "./Routes/authRoutes.js";
+import activitiesRoutes from "./Routes/activitiesRoutes.js";
+
 import { supabase } from "./supabase.js";
 
 dotenv.config();
@@ -18,6 +20,7 @@ app.get("/", (req, res) => {
 
 app.use("/api", testRoutes);
 app.use("/api/auth", authRoutes);
+app.use("/api/activities", activitiesRoutes);
 
 const PORT = process.env.BACKEND_PORT || 5000;
 
