@@ -14,6 +14,33 @@ import AppLayout from "../../Components/Layout/AppLayout";
 import type { Activity } from "./api/apiHomePage";
 import { useGetActivities } from "./hooks/useGetActivities";
 
+const placeholderActiveActivities: Activity[] = [
+  {
+    id: 1,
+    activityName: "Morning Focus",
+    description: "A quiet block for planning the day and clearing priorities.",
+    icon: "MF",
+  },
+  {
+    id: 2,
+    activityName: "Workout",
+    description: "Track movement, strength, or any active routine.",
+    icon: "WO",
+  },
+  {
+    id: 3,
+    activityName: "Study Session",
+    description: "Keep tabs on learning time and deep work progress.",
+    icon: "SS",
+  },
+  {
+    id: 4,
+    activityName: "Creative Flow",
+    description: "Writing, design, building, sketching, and idea work.",
+    icon: "CF",
+  },
+];
+
 function HomePage() {
   const [isDialogOpen, setIsDialogOpen] = useState(false);
   const [selectedActivity, setSelectedActivity] = useState<Activity | null>(null);
@@ -33,6 +60,7 @@ function HomePage() {
     isError,
     refetch,
   } = useGetActivities(isDialogOpen);
+
   const openDialog = () => {
     setIsDialogOpen(true);
     setSelectedActivity(null);
@@ -70,12 +98,182 @@ function HomePage() {
           display: "flex",
           flexDirection: "column",
           alignItems: "center",
-          justifyContent: "center",
-          gap: { xs: 3, sm: 4 },
-          px: 2,
-          textAlign: "center",
+          justifyContent: "flex-start",
+          gap: { xs: 2.5, sm: 3 },
+          px: { xs: 0, sm: 2 },
+          pt: { xs: 2, sm: 3 },
         }}
       >
+        <Box
+          sx={{
+            width: "100%",
+            maxWidth: "70rem",
+            px: { xs: 2, sm: 0 },
+          }}
+        >
+          <Box
+            sx={{
+              display: "flex",
+              alignItems: "flex-end",
+              justifyContent: "space-between",
+              gap: 2,
+              mb: 1.4,
+            }}
+          >
+            <Box>
+              <Typography
+                sx={{
+                  fontSize: { xs: "1.35rem", sm: "1.75rem" },
+                  fontWeight: 900,
+                  letterSpacing: "-0.03em",
+                }}
+              >
+                Active activities
+              </Typography>
+              <Typography sx={{ color: "text.secondary", mt: 0.25 }}>
+                Swipe through your current Plirafy flow.
+              </Typography>
+            </Box>
+            <Typography
+              sx={{
+                color: "text.secondary",
+                display: { xs: "none", sm: "block" },
+                fontSize: "0.82rem",
+                fontWeight: 800,
+                textTransform: "uppercase",
+                letterSpacing: "0.08em",
+              }}
+            >
+              {placeholderActiveActivities.length} active
+            </Typography>
+          </Box>
+
+          <Box
+            sx={{
+              display: "flex",
+              gap: 1.6,
+              overflowX: "auto",
+              overflowY: "hidden",
+              pb: 1.2,
+              scrollPaddingInline: { xs: "1rem", sm: 0 },
+              scrollSnapType: "x mandatory",
+              WebkitOverflowScrolling: "touch",
+              "&::-webkit-scrollbar": {
+                height: 8,
+              },
+              "&::-webkit-scrollbar-thumb": {
+                background:
+                  "color-mix(in srgb, var(--plirafy-accent-end) 36%, transparent)",
+                borderRadius: "999px",
+              },
+              "&::-webkit-scrollbar-track": {
+                background: "transparent",
+              },
+            }}
+          >
+            {placeholderActiveActivities.map((activity, index) => (
+              <Box
+                key={activity.id ?? `${activity.activityName}-${index}`}
+                sx={{
+                  flex: {
+                    xs: "0 0 min(82vw, 19rem)",
+                    sm: "0 0 19rem",
+                    md: "0 0 21rem",
+                  },
+                  minHeight: { xs: "10.5rem", sm: "11.75rem" },
+                  p: { xs: 2, sm: 2.25 },
+                  borderRadius: "1.45rem",
+                  border: "1px solid var(--plirafy-divider)",
+                  background:
+                    "linear-gradient(135deg, color-mix(in srgb, var(--plirafy-accent-start) 18%, transparent), color-mix(in srgb, var(--plirafy-accent-end) 10%, transparent)), var(--plirafy-paper-glass)",
+                  boxShadow: "0 18px 38px rgba(0, 0, 0, 0.18)",
+                  scrollSnapAlign: "start",
+                  position: "relative",
+                  overflow: "hidden",
+                  display: "flex",
+                  flexDirection: "column",
+                  justifyContent: "space-between",
+                  isolation: "isolate",
+                  "&::before": {
+                    content: '\"\"',
+                    position: "absolute",
+                    right: "-2.4rem",
+                    top: "-2.6rem",
+                    width: "8rem",
+                    height: "8rem",
+                    borderRadius: "999px",
+                    background:
+                      "radial-gradient(circle, color-mix(in srgb, var(--plirafy-accent-end) 30%, transparent), transparent 70%)",
+                    zIndex: -1,
+                  },
+                }}
+              >
+                <Box
+                  sx={{
+                    display: "flex",
+                    alignItems: "flex-start",
+                    justifyContent: "space-between",
+                    gap: 1.5,
+                  }}
+                >
+                  <Box
+                    sx={{
+                      width: 54,
+                      height: 54,
+                      borderRadius: "1.1rem",
+                      display: "grid",
+                      placeItems: "center",
+                      background:
+                        "linear-gradient(135deg, rgba(255, 255, 255, 0.24), rgba(255, 255, 255, 0.08))",
+                      border: "1px solid rgba(255, 255, 255, 0.18)",
+                      fontSize: "1.05rem",
+                      fontWeight: 900,
+                      boxShadow: "0 12px 22px rgba(0, 0, 0, 0.16)",
+                    }}
+                  >
+                    {activity.icon}
+                  </Box>
+                  <Typography
+                    sx={{
+                      color: "text.secondary",
+                      fontSize: "0.72rem",
+                      fontWeight: 900,
+                      textTransform: "uppercase",
+                      letterSpacing: "0.08em",
+                    }}
+                  >
+                    Active
+                  </Typography>
+                </Box>
+
+                <Box>
+                  <Typography
+                    sx={{
+                      fontSize: { xs: "1.25rem", sm: "1.4rem" },
+                      fontWeight: 900,
+                      mb: 0.65,
+                    }}
+                  >
+                    {activity.activityName}
+                  </Typography>
+                  <Typography
+                    sx={{
+                      color: "text.secondary",
+                      display: "-webkit-box",
+                      fontSize: "0.92rem",
+                      overflow: "hidden",
+                      WebkitBoxOrient: "vertical",
+                      WebkitLineClamp: 2,
+                    }}
+                  >
+                    {activity.description}
+                  </Typography>
+                </Box>
+              </Box>
+            ))}
+          </Box>
+        </Box>
+
         <Button
           variant="contained"
           onClick={openDialog}
