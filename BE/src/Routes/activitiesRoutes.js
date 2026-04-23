@@ -6,7 +6,6 @@ import { AssignActivityToUser } from "../Controllers/activitiesController.js";
 import { getUserActivities } from "../Controllers/activitiesController.js";
 import { deleteUserActivities } from "../Controllers/activitiesController.js";
 
-
 const router = express.Router();
 
 router.get("/getActivities", getActivities);
