@@ -1,4 +1,4 @@
-import { useState, useEffect } from "react";
+import { useState, /* useEffect */ } from "react";
 import {
   TextField,
   Button,
@@ -6,21 +6,33 @@ import {
   Paper,
   Box,
   Link,
+  Snackbar,
+  Alert,
 } from "@mui/material";
 import { useNavigate } from "react-router-dom";
 import AppLayout from "../../Components/Layout/AppLayout";
 import PlirafyPhraseWhite from "../../assets/PlirafyPhraseWhite.png";
-import PlirafyBackground from "../../assets/PlirafyBackground.png";
 import KuMiStackMarkNOBG from "../../assets/KuMiStackMarkNOBG.png";
 import { useLogin } from "./hooks/useLogin";
+import { useUserStore } from "./store/useUserStore";
 
 function LoginPage() {
   const navigate = useNavigate();
-  const { mutate, isPending, error } = useLogin();
+  const { mutate, isPending } = useLogin();
+  const setUser = useUserStore((state) => state.setUser);
 
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
-  const [message, setMessage] = useState("");
+  /* const [message, setMessage] = useState(""); */
+  const [notification, setNotification] = useState<{
+    open: boolean;
+    severity: "success" | "error";
+    message: string;
+  }>({
+    open: false,
+    severity: "success",
+    message: "",
+  });
 
   const handleLogin = () => {
     mutate(
@@ -28,16 +40,27 @@ function LoginPage() {
       {
         onSuccess: (data) => {
           console.log("Login success:", data);
-          navigate("/homepage");
+          setUser(data.user);
+          setNotification({
+            open: true,
+            severity: "success",
+            message: "Login successful",
+          });
+          window.setTimeout(() => navigate("/homepage"), 900);
         },
         onError: (err) => {
           console.error("Login error:", err);
+          setNotification({
+            open: true,
+            severity: "error",
+            message: err instanceof Error ? err.message : "Login failed",
+          });
         },
       }
     );
   };
 
-  useEffect(() => {
+/*   useEffect(() => {
     fetch("http://localhost:5000/api/hello")
       .then((res) => res.json())
       .then((data) => {
@@ -46,11 +69,10 @@ function LoginPage() {
       .catch(() => {
         setMessage("Failed to connect to backend");
       });
-  }, []);
+  }, []); */
 
   return (
     <AppLayout>
-      {/* 🔥 BACKGROUND WRAPPER */}
       <Box
         sx={{
           minHeight: "100vh",
@@ -60,24 +82,8 @@ function LoginPage() {
           alignItems: "center",
           position: "relative",
           overflow: "hidden",
-          backgroundImage: `url(${PlirafyBackground})`,
-          backgroundSize: "cover",
-          backgroundPosition: "center",
-          backgroundRepeat: "no-repeat",
         }}
       >
-        {/* 🔥 DARK OVERLAY (so text is readable and not fighting your background) */}
-        <Box
-          sx={{
-            position: "absolute",
-            inset: 0,
-            background:
-              "radial-gradient(circle at center, rgba(10,10,30,0.6), rgba(5,5,15,0.9))",
-            backdropFilter: "blur(2px)",
-          }}
-        />
-
-        {/* 🔥 CONTENT */}
         <Box
           sx={{
             width: "min(100%, 34rem)",
@@ -103,7 +109,7 @@ function LoginPage() {
                 transform: "translateX(-50%)",
                 width: "clamp(7.5rem, 17vw, 11rem)",
                 zIndex: 2,
-                filter: "drop-shadow(0 8px 25px rgba(124, 92, 255, 0.32))",
+                filter: "drop-shadow(0 8px 25px var(--plirafy-accent-shadow))",
                 pointerEvents: "none",
               }}
             />
@@ -116,10 +122,10 @@ function LoginPage() {
                 px: "clamp(1.1rem, 2.4vw, 2rem)",
                 pb: "clamp(1.3rem, 2.4vw, 2rem)",
                 borderRadius: "clamp(1.2rem, 2vw, 1.7rem)",
-                border: "1px solid rgba(124, 92, 255, 0.16)",
+                border: "1px solid var(--plirafy-divider)",
                 backdropFilter: "blur(12px)",
-                background: "rgba(20, 20, 40, 0.55)",
-                boxShadow: "0 0 30px rgba(70, 60, 180, 0.2)",
+                background: "var(--plirafy-paper-glass)",
+                boxShadow: "0 0 30px var(--plirafy-accent-shadow)",
               }}
             >
               <Typography
@@ -186,14 +192,6 @@ function LoginPage() {
                 {isPending ? "Logging in..." : "Login"}
               </Button>
 
-              {error instanceof Error && (
-                <Typography
-                  sx={{ mt: 1.5, color: "error.main", textAlign: "center" }}
-                >
-                  {error.message}
-                </Typography>
-              )}
-
               <Box
                 sx={{
                   mt: 2.25,
@@ -242,7 +240,7 @@ function LoginPage() {
             <Typography
               variant="body2"
               sx={{
-                color: "rgba(255, 255, 255, 0.82)",
+                color: "text.primary",
                 fontWeight: 700,
                 lineHeight: 1,
                 fontSize: "0.9rem",
@@ -254,7 +252,7 @@ function LoginPage() {
             </Typography>
           </Box>
 
-          {message && (
+{/*           {message && (
             <Typography
               variant="caption"
               sx={{
@@ -266,8 +264,28 @@ function LoginPage() {
             >
               {message}
             </Typography>
-          )}
+          )} */}
         </Box>
+
+        <Snackbar
+          open={notification.open}
+          autoHideDuration={3500}
+          onClose={() =>
+            setNotification((current) => ({ ...current, open: false }))
+          }
+          anchorOrigin={{ vertical: "top", horizontal: "center" }}
+        >
+          <Alert
+            severity={notification.severity}
+            variant="filled"
+            onClose={() =>
+              setNotification((current) => ({ ...current, open: false }))
+            }
+            sx={{ width: "100%" }}
+          >
+            {notification.message}
+          </Alert>
+        </Snackbar>
       </Box>
     </AppLayout>
   );
