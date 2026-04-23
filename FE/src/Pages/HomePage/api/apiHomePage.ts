@@ -4,7 +4,7 @@ const postActivitiesApi = `${activitiesApi}/postActivities`;
 const getActivitiesApi = `${activitiesApi}/getActivities`;
 const getUserActivitiesApi = `${activitiesApi}/getUserActivities`;
 const assignActivityToUserApi = `${activitiesApi}/assignActivityToUser`;
-const deleteUserActivityApi = `${apiRoot}/deleteUserActivities`;
+const deleteUserActivityApi = `${activitiesApi}/deleteUserActivities`;
 
 export type Activity = {
   id?: number;

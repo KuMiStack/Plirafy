@@ -15,6 +15,7 @@ import {
   SvgIcon,
   Typography,
 } from "@mui/material";
+import { useNavigate } from "react-router-dom";
 import AppLayout from "../../Components/Layout/AppLayout";
 import { useUserStore } from "../LoginPage/store/useUserStore";
 import {
@@ -46,6 +47,7 @@ const DeleteIcon = () => (
 );
 
 function HomePage() {
+  const navigate = useNavigate();
   const user = useUserStore((state) => state.user);
   const [isDialogOpen, setIsDialogOpen] = useState(false);
   const [selectedActivity, setSelectedActivity] = useState<Activity | null>(null);
@@ -141,6 +143,19 @@ function HomePage() {
     } finally {
       closeActivityMenu();
     }
+  };
+
+  const handleOpenActivity = (activity: Activity) => {
+    if (activity.activityName === "Financial Tracker") {
+      navigate("/financial-tracking");
+      return;
+    }
+
+    setNotification({
+      open: true,
+      severity: "error",
+      message: `${activity.activityName} module is not available yet`,
+    });
   };
 
   const openDialog = () => {
@@ -356,6 +371,9 @@ function HomePage() {
                       getActivityId(activity) ??
                       `${activity.activityName}-${index}`
                     }
+                    component="button"
+                    type="button"
+                    onClick={() => handleOpenActivity(activity)}
                     sx={{
                       flex: {
                         xs: "0 0 min(82vw, 19rem)",
@@ -376,6 +394,15 @@ function HomePage() {
                       flexDirection: "column",
                       justifyContent: "space-between",
                       isolation: "isolate",
+                      textAlign: "left",
+                      color: "text.primary",
+                      cursor: "pointer",
+                      transition:
+                        "transform 0.2s ease, box-shadow 0.2s ease, border-color 0.2s ease",
+                      "&:hover": {
+                        transform: "translateY(-3px)",
+                        boxShadow: "0 22px 44px rgba(0, 0, 0, 0.2)",
+                      },
                       "&::before": {
                         content: '\"\"',
                         position: "absolute",
@@ -436,6 +463,7 @@ function HomePage() {
                         <IconButton
                           aria-label={`Open ${activity.activityName} menu`}
                           onClick={(event) => openActivityMenu(event, activity)}
+                          onMouseDown={(event) => event.stopPropagation()}
                           sx={{
                             color: "text.primary",
                             width: 34,
@@ -716,6 +744,10 @@ function HomePage() {
           setNotification((current) => ({ ...current, open: false }))
         }
         anchorOrigin={{ vertical: "top", horizontal: "center" }}
+        sx={{
+          top: { xs: "4.35rem !important", sm: "4.85rem !important" },
+          zIndex: 10000,
+        }}
       >
         <Alert
           severity={notification.severity}

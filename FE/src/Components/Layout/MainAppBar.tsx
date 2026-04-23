@@ -190,7 +190,7 @@ function MainAppBar() {
       >
         <Toolbar
           sx={{
-            minHeight: { xs: "4.5rem", sm: "5.25rem" },
+            minHeight: { xs: "3.85rem", sm: "4.35rem" },
             px: { xs: 2, sm: 3 },
             display: "flex",
             justifyContent: "space-between",
@@ -213,8 +213,8 @@ function MainAppBar() {
               alt=""
               aria-hidden="true"
               sx={{
-                width: { xs: "2.25rem", sm: "2.65rem" },
-                height: { xs: "2.75rem", sm: "3.2rem" },
+                width: { xs: "1.9rem", sm: "2.25rem" },
+                height: { xs: "2.35rem", sm: "2.75rem" },
                 objectFit: "contain",
                 filter: "drop-shadow(0 8px 24px var(--plirafy-logo-shadow))",
               }}
@@ -223,7 +223,7 @@ function MainAppBar() {
               sx={{
                 ml: 1,
                 color: "text.primary",
-                fontSize: { xs: "1.35rem", sm: "1.65rem" },
+                fontSize: { xs: "1.22rem", sm: "1.45rem" },
                 fontWeight: 800,
                 lineHeight: 1,
                 letterSpacing: 0,
@@ -269,8 +269,8 @@ function MainAppBar() {
             >
               <Avatar
                 sx={{
-                  width: { xs: 36, sm: 40 },
-                  height: { xs: 36, sm: 40 },
+                  width: { xs: 32, sm: 36 },
+                  height: { xs: 32, sm: 36 },
                   background: "var(--plirafy-gradient)",
                   color: "text.primary",
                   border:

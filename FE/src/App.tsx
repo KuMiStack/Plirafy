@@ -11,6 +11,7 @@ import { Routes, Route } from "react-router-dom";
 import LoginPage from "./Pages/LoginPage/LoginPage";
 import SignUpPage from "./Pages/SignUpPage/SignUpPage";
 import HomePage from "./Pages/HomePage/HomePage";
+import FinancialTrackingPage from "./Pages/FinancialTracking/FinancialTrackingPage";
 import { PlirafyThemeProvider } from "./Components/Layout/PlirafyThemeProvider";
 import { useOnlineStatus } from "./Components/Layout/useOnlineStatus";
 
@@ -23,6 +24,7 @@ function AppContent() {
         <Route path="/" element={<LoginPage />} />
         <Route path="/signup" element={<SignUpPage />} />
         <Route path="/homepage" element={<HomePage />} />
+        <Route path="/financial-tracking" element={<FinancialTrackingPage />} />
       </Routes>
 
       <Backdrop
@@ -63,7 +65,10 @@ function AppContent() {
       <Snackbar
         open={!isOnline}
         anchorOrigin={{ vertical: "top", horizontal: "center" }}
-        sx={{ zIndex: 10000 }}
+        sx={{
+          top: { xs: "4.35rem !important", sm: "4.85rem !important" },
+          zIndex: 10000,
+        }}
       >
         <Alert severity="error" variant="filled" sx={{ width: "100%" }}>
           Trying to reconnect

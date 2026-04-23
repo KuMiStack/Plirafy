@@ -46,7 +46,7 @@ const AppLayout = ({ children, showAppBar = false }: AppLayoutProps) => {
           display: "flex",
           alignItems: "center",
           justifyContent: "center",
-          pt: showAppBar ? { xs: "4.5rem", sm: "5.25rem" } : 0,
+          pt: showAppBar ? { xs: "3.85rem", sm: "4.35rem" } : 0,
           boxSizing: "border-box",
         }}
       >

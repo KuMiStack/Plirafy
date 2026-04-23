@@ -282,6 +282,10 @@ function SignUpPage() {
             setNotification((current) => ({ ...current, open: false }))
           }
           anchorOrigin={{ vertical: "top", horizontal: "center" }}
+          sx={{
+            top: { xs: "4.35rem !important", sm: "4.85rem !important" },
+            zIndex: 10000,
+          }}
         >
           <Alert
             severity={notification.severity}
