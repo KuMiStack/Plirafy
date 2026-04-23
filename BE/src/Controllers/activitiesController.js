@@ -227,7 +227,7 @@ export const deleteUserActivities = async (req,res) => {
     const {data,error} = await supabase
     .from("user_activities")
     .delete()
-    .eq("userActivityId", userActivityId)
+    .eq("id", userActivityId)
     .select()
 
     if(error){
