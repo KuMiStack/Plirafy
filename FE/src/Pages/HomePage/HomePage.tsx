@@ -11,10 +11,8 @@ import {
   Typography,
 } from "@mui/material";
 import AppLayout from "../../Components/Layout/AppLayout";
-import PlirafyLogo from "../../assets/PlirafyLogo.jpeg";
 import type { Activity } from "./api/apiHomePage";
 import { useGetActivities } from "./hooks/useGetActivities";
-import { usePostActivities } from "./hooks/usePostActivities";
 
 function HomePage() {
   const [isDialogOpen, setIsDialogOpen] = useState(false);
@@ -35,23 +33,12 @@ function HomePage() {
     isError,
     refetch,
   } = useGetActivities(isDialogOpen);
-  const { mutate: createActivity, isPending } = usePostActivities();
-
   const openDialog = () => {
     setIsDialogOpen(true);
     setSelectedActivity(null);
   };
 
   const closeDialog = () => {
-    if (isPending) {
-      return;
-    }
-
-    setIsDialogOpen(false);
-    setSelectedActivity(null);
-  };
-
-  const closeDialogAfterCreate = () => {
     setIsDialogOpen(false);
     setSelectedActivity(null);
   };
@@ -66,24 +53,12 @@ function HomePage() {
       return;
     }
 
-    createActivity(selectedActivity, {
-      onSuccess: () => {
-        setNotification({
-          open: true,
-          severity: "success",
-          message: "Activity created successfully",
-        });
-        closeDialogAfterCreate();
-      },
-      onError: (err) => {
-        setNotification({
-          open: true,
-          severity: "error",
-          message:
-            err instanceof Error ? err.message : "Creating activity failed",
-        });
-      },
+    setNotification({
+      open: true,
+      severity: "success",
+      message: `${selectedActivity.activityName} selected`,
     });
+    closeDialog();
   };
 
   return (
@@ -101,17 +76,6 @@ function HomePage() {
           textAlign: "center",
         }}
       >
-        <Box
-          component="img"
-          src={PlirafyLogo}
-          alt="Plirafy Logo"
-          sx={{
-            width: { xs: "70%", sm: "400px", md: "500px" },
-            maxWidth: "90%",
-            filter: "drop-shadow(0 0 25px var(--plirafy-accent-shadow))",
-          }}
-        />
-
         <Button
           variant="contained"
           onClick={openDialog}
@@ -145,6 +109,7 @@ function HomePage() {
               border: "1px solid var(--plirafy-divider)",
               boxShadow: "0 24px 70px rgba(0, 0, 0, 0.42)",
               backdropFilter: "blur(18px)",
+              overflow: "hidden",
             },
           },
         }}
@@ -152,7 +117,7 @@ function HomePage() {
         <DialogTitle sx={{ pb: 1, fontWeight: 800 }}>
           Create a new activity
         </DialogTitle>
-        <DialogContent sx={{ pt: 1, pb: 3 }}>
+        <DialogContent sx={{ pt: 1, pb: 3, overflow: "hidden" }}>
           <Typography sx={{ color: "text.secondary", mb: 2 }}>
             Choose one of the available activities, then confirm to add it.
           </Typography>
@@ -199,10 +164,8 @@ function HomePage() {
               sx={{
                 display: "grid",
                 gridTemplateColumns: { xs: "1fr", sm: "1fr 1fr" },
-                gap: 1.25,
-                maxHeight: "min(42vh, 22rem)",
-                overflowY: "auto",
-                pr: 0.5,
+                gap: 1.5,
+                alignItems: "stretch",
               }}
             >
               {activities.map((activity, index) => {
@@ -217,7 +180,8 @@ function HomePage() {
                     onClick={() => setSelectedActivity(activity)}
                     sx={{
                       p: 1.5,
-                      minHeight: "8rem",
+                      minHeight: { xs: "7rem", sm: "8rem" },
+                      height: "100%",
                       textAlign: "left",
                       borderRadius: "1rem",
                       border: isSelected
@@ -228,6 +192,8 @@ function HomePage() {
                         : "var(--plirafy-paper-glass)",
                       color: "text.primary",
                       cursor: "pointer",
+                      display: "flex",
+                      flexDirection: "column",
                       transition:
                         "transform 0.2s ease, box-shadow 0.2s ease, border-color 0.2s ease",
                       boxShadow: isSelected
@@ -245,7 +211,16 @@ function HomePage() {
                     <Typography sx={{ fontWeight: 800, mb: 0.5 }}>
                       {activity.activityName}
                     </Typography>
-                    <Typography sx={{ color: "text.secondary", fontSize: "0.88rem" }}>
+                    <Typography
+                      sx={{
+                        color: "text.secondary",
+                        display: "-webkit-box",
+                        fontSize: "0.88rem",
+                        overflow: "hidden",
+                        WebkitBoxOrient: "vertical",
+                        WebkitLineClamp: 3,
+                      }}
+                    >
                       {activity.description}
                     </Typography>
                   </Box>
@@ -262,15 +237,15 @@ function HomePage() {
               mt: 3,
             }}
           >
-            <Button variant="text" onClick={closeDialog} disabled={isPending}>
+            <Button variant="text" onClick={closeDialog}>
               Cancel
             </Button>
             <Button
               variant="contained"
               onClick={handleConfirm}
-              disabled={!selectedActivity || isPending}
+              disabled={!selectedActivity}
             >
-              {isPending ? "Creating..." : "Confirm"}
+              Confirm
             </Button>
           </Box>
         </DialogContent>

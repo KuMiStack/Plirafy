@@ -1,22 +1,11 @@
 import { CssBaseline, ThemeProvider } from "@mui/material";
+import { createContext, useContext, useMemo, type ReactNode } from "react";
+import { useUserStore } from "../../Pages/LoginPage/store/useUserStore";
 import {
-  createContext,
-  useContext,
-  useEffect,
-  useMemo,
-  useState,
-  type ReactNode,
-} from "react";
-import {
-  accentOptions,
-  backgroundOptions,
   createPlirafyTheme,
-  defaultThemeSettings,
-  type AccentColorId,
   type AccentColorValue,
   type BackgroundThemeId,
   type PlirafyThemeSettings,
-  isHexColor,
 } from "./theme";
 
 type PlirafyThemeContextValue = {
@@ -27,60 +16,14 @@ type PlirafyThemeContextValue = {
 };
 
 const PlirafyThemeContext = createContext<PlirafyThemeContextValue | null>(null);
-const storageKey = "plirafy-theme-settings";
-
-const backgroundIds = new Set(backgroundOptions.map((option) => option.id));
-const accentIds = new Set(accentOptions.map((option) => option.id));
-
-const isBackgroundId = (value: unknown): value is BackgroundThemeId =>
-  typeof value === "string" && backgroundIds.has(value as BackgroundThemeId);
-
-const isAccentId = (value: unknown): value is AccentColorId =>
-  typeof value === "string" && accentIds.has(value as AccentColorId);
-
-const isAccentValue = (value: unknown): value is AccentColorValue =>
-  isAccentId(value) || isHexColor(value);
-
-const loadThemeSettings = (): PlirafyThemeSettings => {
-  if (typeof window === "undefined") {
-    return defaultThemeSettings;
-  }
-
-  try {
-    const storedValue = window.localStorage.getItem(storageKey);
-
-    if (!storedValue) {
-      return defaultThemeSettings;
-    }
-
-    const parsedValue = JSON.parse(storedValue) as Partial<PlirafyThemeSettings>;
-
-    return {
-      background: isBackgroundId(parsedValue.background)
-        ? parsedValue.background
-        : defaultThemeSettings.background,
-      accentStart: isAccentValue(parsedValue.accentStart)
-        ? parsedValue.accentStart
-        : defaultThemeSettings.accentStart,
-      accentEnd: isAccentValue(parsedValue.accentEnd)
-        ? parsedValue.accentEnd
-        : defaultThemeSettings.accentEnd,
-    };
-  } catch {
-    return defaultThemeSettings;
-  }
-};
 
 type PlirafyThemeProviderProps = {
   children: ReactNode;
 };
 
 export function PlirafyThemeProvider({ children }: PlirafyThemeProviderProps) {
-  const [settings, setSettings] = useState<PlirafyThemeSettings>(loadThemeSettings);
-
-  useEffect(() => {
-    window.localStorage.setItem(storageKey, JSON.stringify(settings));
-  }, [settings]);
+  const settings = useUserStore((state) => state.themeSettings);
+  const setThemeSettings = useUserStore((state) => state.setThemeSettings);
 
   const theme = useMemo(() => createPlirafyTheme(settings), [settings]);
 
@@ -88,13 +31,13 @@ export function PlirafyThemeProvider({ children }: PlirafyThemeProviderProps) {
     () => ({
       settings,
       setBackground: (background) =>
-        setSettings((current) => ({ ...current, background })),
+        setThemeSettings({ ...settings, background }),
       setAccentStart: (accentStart) =>
-        setSettings((current) => ({ ...current, accentStart })),
+        setThemeSettings({ ...settings, accentStart }),
       setAccentEnd: (accentEnd) =>
-        setSettings((current) => ({ ...current, accentEnd })),
+        setThemeSettings({ ...settings, accentEnd }),
     }),
-    [settings]
+    [setThemeSettings, settings]
   );
 
   return (

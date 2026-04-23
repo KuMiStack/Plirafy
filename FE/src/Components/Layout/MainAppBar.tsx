@@ -31,6 +31,7 @@ import {
   isHexColor,
   type AccentColorValue,
 } from "./theme";
+import { useOnlineStatus } from "./useOnlineStatus";
 
 const getColorPickerValue = (value: AccentColorValue) => {
   if (isHexColor(value)) {
@@ -66,6 +67,18 @@ const ContactIcon = () => (
 const LogoutIcon = () => (
   <SvgIcon sx={iconSx} viewBox="0 0 24 24">
     <path d="M10 17v-2h4v-2h-4v-2h4V9h-4V7l-5 5 5 5Zm8 3H12v-2h6V6h-6V4h6a2 2 0 0 1 2 2v12a2 2 0 0 1-2 2Z" />
+  </SvgIcon>
+);
+
+const OnlineStatusIcon = () => (
+  <SvgIcon sx={{ color: "inherit", fontSize: "1rem" }} viewBox="0 0 24 24">
+    <path d="M12 18.5a1.75 1.75 0 1 0 0-3.5 1.75 1.75 0 0 0 0 3.5Zm-4.95-4.95 1.42 1.42a5 5 0 0 1 7.06 0l1.42-1.42a7 7 0 0 0-9.9 0ZM3.5 10l1.42 1.42a10 10 0 0 1 14.16 0L20.5 10a12 12 0 0 0-17 0Z" />
+  </SvgIcon>
+);
+
+const OfflineStatusIcon = () => (
+  <SvgIcon sx={{ color: "inherit", fontSize: "1rem" }} viewBox="0 0 24 24">
+    <path d="m3.28 2 18.72 18.72-1.28 1.28-3.08-3.08A1.75 1.75 0 0 1 15.5 17.2L12 13.7l-1.5-1.5-2.08-2.08L6.95 8.65 2 3.28 3.28 2ZM12 5a12 12 0 0 1 8.5 3.52L19.08 9.94A10 10 0 0 0 8.2 7.3L6.65 5.75A11.96 11.96 0 0 1 12 5Zm0 4a8 8 0 0 1 5.66 2.34l-1.42 1.42A6 6 0 0 0 10.8 11.1L9.2 9.5A8.08 8.08 0 0 1 12 9Zm-7.08-.48 1.42 1.42a10.2 10.2 0 0 0-1.42 1.48L3.5 10a12.64 12.64 0 0 1 1.42-1.48Zm3.2 3.2 1.42 1.42a5.6 5.6 0 0 0-1.07 1.09l-1.42-1.42c.31-.39.67-.75 1.07-1.09Z" />
   </SvgIcon>
 );
 
@@ -107,7 +120,7 @@ const drawerMenuItemSx = {
   mx: 1.5,
   my: 0.45,
   opacity: 0,
-        py: 1.05,
+  py: 1.05,
   transform: "translateX(16px)",
   transition:
     "background 0.22s ease, border-color 0.22s ease, transform 0.22s ease, box-shadow 0.22s ease",
@@ -126,6 +139,7 @@ function MainAppBar() {
   const [isContactDialogOpen, setIsContactDialogOpen] = useState(false);
   const user = useUserStore((state) => state.user);
   const clearUser = useUserStore((state) => state.clearUser);
+  const isOnline = useOnlineStatus();
   const { settings, setBackground, setAccentStart, setAccentEnd } =
     usePlirafyTheme();
   const { gradient } = getPlirafyThemeParts(settings);
@@ -382,6 +396,29 @@ function MainAppBar() {
               animation: "drawerItemIn 360ms ease forwards",
             }}
           >
+            <Box
+              sx={{
+                display: "inline-flex",
+                alignItems: "center",
+                gap: 0.75,
+                px: 1.2,
+                py: 0.55,
+                borderRadius: "999px",
+                color: isOnline ? "#16a34a" : "#ef4444",
+                background: isOnline
+                  ? "rgba(22, 163, 74, 0.12)"
+                  : "rgba(239, 68, 68, 0.12)",
+                border: isOnline
+                  ? "1px solid rgba(22, 163, 74, 0.24)"
+                  : "1px solid rgba(239, 68, 68, 0.24)",
+                fontSize: "0.75rem",
+                fontWeight: 800,
+                mb: 0.25,
+              }}
+            >
+              {isOnline ? <OnlineStatusIcon /> : <OfflineStatusIcon />}
+              {isOnline ? "Online" : "Offline"}
+            </Box>
             <Avatar
               sx={{
                 width: { xs: 62, sm: 76 },

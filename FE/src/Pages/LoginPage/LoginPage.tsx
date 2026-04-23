@@ -11,6 +11,8 @@ import {
 } from "@mui/material";
 import { useNavigate } from "react-router-dom";
 import AppLayout from "../../Components/Layout/AppLayout";
+import { usePlirafyTheme } from "../../Components/Layout/PlirafyThemeProvider";
+import PlirafyPhrase from "../../assets/PlirafyPhrase.png";
 import PlirafyPhraseWhite from "../../assets/PlirafyPhraseWhite.png";
 import KuMiStackMarkNOBG from "../../assets/KuMiStackMarkNOBG.png";
 import { useLogin } from "./hooks/useLogin";
@@ -20,6 +22,9 @@ function LoginPage() {
   const navigate = useNavigate();
   const { mutate, isPending } = useLogin();
   const setUser = useUserStore((state) => state.setUser);
+  const { settings } = usePlirafyTheme();
+  const isLightTheme = settings.background === "white";
+  const phraseLogo = isLightTheme ? PlirafyPhrase : PlirafyPhraseWhite;
 
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
@@ -100,8 +105,8 @@ function LoginPage() {
           <Box sx={{ position: "relative", width: "100%" }}>
             <Box
               component="img"
-              src={PlirafyPhraseWhite}
-              alt="Plirafy phrase white"
+              src={phraseLogo}
+              alt="Plirafy phrase"
               sx={{
                 position: "absolute",
                 top: "-2.9rem",
@@ -109,7 +114,9 @@ function LoginPage() {
                 transform: "translateX(-50%)",
                 width: "clamp(7.5rem, 17vw, 11rem)",
                 zIndex: 2,
-                filter: "drop-shadow(0 8px 25px var(--plirafy-accent-shadow))",
+                filter: isLightTheme
+                  ? "drop-shadow(0 10px 24px rgba(17, 24, 39, 0.2))"
+                  : "drop-shadow(0 8px 25px var(--plirafy-accent-shadow))",
                 pointerEvents: "none",
               }}
             />
