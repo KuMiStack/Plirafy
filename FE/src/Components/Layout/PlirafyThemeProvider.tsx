@@ -13,15 +13,17 @@ import {
   createPlirafyTheme,
   defaultThemeSettings,
   type AccentColorId,
+  type AccentColorValue,
   type BackgroundThemeId,
   type PlirafyThemeSettings,
+  isHexColor,
 } from "./theme";
 
 type PlirafyThemeContextValue = {
   settings: PlirafyThemeSettings;
   setBackground: (background: BackgroundThemeId) => void;
-  setAccentStart: (accentStart: AccentColorId) => void;
-  setAccentEnd: (accentEnd: AccentColorId) => void;
+  setAccentStart: (accentStart: AccentColorValue) => void;
+  setAccentEnd: (accentEnd: AccentColorValue) => void;
 };
 
 const PlirafyThemeContext = createContext<PlirafyThemeContextValue | null>(null);
@@ -35,6 +37,9 @@ const isBackgroundId = (value: unknown): value is BackgroundThemeId =>
 
 const isAccentId = (value: unknown): value is AccentColorId =>
   typeof value === "string" && accentIds.has(value as AccentColorId);
+
+const isAccentValue = (value: unknown): value is AccentColorValue =>
+  isAccentId(value) || isHexColor(value);
 
 const loadThemeSettings = (): PlirafyThemeSettings => {
   if (typeof window === "undefined") {
@@ -54,10 +59,10 @@ const loadThemeSettings = (): PlirafyThemeSettings => {
       background: isBackgroundId(parsedValue.background)
         ? parsedValue.background
         : defaultThemeSettings.background,
-      accentStart: isAccentId(parsedValue.accentStart)
+      accentStart: isAccentValue(parsedValue.accentStart)
         ? parsedValue.accentStart
         : defaultThemeSettings.accentStart,
-      accentEnd: isAccentId(parsedValue.accentEnd)
+      accentEnd: isAccentValue(parsedValue.accentEnd)
         ? parsedValue.accentEnd
         : defaultThemeSettings.accentEnd,
     };

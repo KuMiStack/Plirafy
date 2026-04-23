@@ -8,11 +8,12 @@ export type AccentColorId =
   | "cyan"
   | "gold"
   | "white";
+export type AccentColorValue = AccentColorId | `#${string}`;
 
 export type PlirafyThemeSettings = {
   background: BackgroundThemeId;
-  accentStart: AccentColorId;
-  accentEnd: AccentColorId;
+  accentStart: AccentColorValue;
+  accentEnd: AccentColorValue;
 };
 
 type BackgroundOption = {
@@ -42,6 +43,33 @@ type AccentOption = {
   hover: string;
   shadow: string;
   contrastText: string;
+};
+
+export const isHexColor = (value: unknown): value is `#${string}` =>
+  typeof value === "string" && /^#[0-9a-fA-F]{6}$/.test(value);
+
+const hexToRgb = (hex: string) => {
+  const normalizedHex = hex.replace("#", "");
+  const value = Number.parseInt(normalizedHex, 16);
+
+  return {
+    r: (value >> 16) & 255,
+    g: (value >> 8) & 255,
+    b: value & 255,
+  };
+};
+
+const getContrastText = (hex: string) => {
+  const { r, g, b } = hexToRgb(hex);
+  const luminance = (0.299 * r + 0.587 * g + 0.114 * b) / 255;
+
+  return luminance > 0.64 ? "#111827" : "#ffffff";
+};
+
+const getColorShadow = (hex: string, opacity = 0.35) => {
+  const { r, g, b } = hexToRgb(hex);
+
+  return `rgba(${r}, ${g}, ${b}, ${opacity})`;
 };
 
 export const defaultThemeSettings: PlirafyThemeSettings = {
@@ -187,8 +215,26 @@ export const accentOptions: AccentOption[] = [
 const findBackground = (id: BackgroundThemeId) =>
   backgroundOptions.find((option) => option.id === id) ?? backgroundOptions[0];
 
-const findAccent = (id: AccentColorId) =>
-  accentOptions.find((option) => option.id === id) ?? accentOptions[0];
+const findAccent = (value: AccentColorValue): AccentOption => {
+  const preset = accentOptions.find((option) => option.id === value);
+
+  if (preset) {
+    return preset;
+  }
+
+  if (isHexColor(value)) {
+    return {
+      id: "blue",
+      label: "Custom",
+      main: value,
+      hover: value,
+      shadow: getColorShadow(value),
+      contrastText: getContrastText(value),
+    };
+  }
+
+  return accentOptions[0];
+};
 
 export const getPlirafyThemeParts = (settings: PlirafyThemeSettings) => {
   const background = findBackground(settings.background);
